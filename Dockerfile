@@ -11,9 +11,9 @@ RUN apk add --no-cache \
     chromium \
     nss freetype harfbuzz ca-certificates ttf-freefont \
     g++ make python3 \
+    libxml2-dev \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install pdo pdo_mysql pdo_pgsql intl zip opcache gd \
-    && rm -rf /var/cache/apk/*
+    && docker-php-ext-install pdo pdo_mysql pdo_pgsql intl zip opcache gd xml simplexml xmlwriter mbstring bcmath
 
 # ===============================
 # Puppeteer ENV (pour Browsershot)
@@ -28,20 +28,23 @@ COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
 WORKDIR /var/www/html
 
-# Installer d'abord les dépendances avec un meilleur cache Docker
 COPY composer.json composer.lock ./
+COPY . .
+
+# ===============================
+# PHP dependencies
+# ===============================
 RUN composer install \
     --no-dev \
     --prefer-dist \
     --no-interaction \
     --optimize-autoloader
 
+# ===============================
 # Node dependencies pour Browsershot
+# ===============================
 COPY package*.json ./
-RUN npm ci --omit=dev --legacy-peer-deps
-
-# Copier le reste du code ensuite
-COPY . .
+RUN npm install --legacy-peer-deps
 
 RUN chown -R www-data:www-data storage bootstrap/cache
 
