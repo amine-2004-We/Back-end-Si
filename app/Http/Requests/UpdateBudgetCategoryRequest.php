@@ -1,0 +1,41 @@
+<?php
+
+namespace App\Http\Requests;
+
+use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
+
+class UpdateBudgetCategoryRequest extends FormRequest
+{
+    /**
+     * Determine if the user is authorized to make this request.
+     */
+    public function authorize(): bool
+    {
+        return true;
+    }
+
+    /**
+     * Get the validation rules that apply to the request.
+     *
+     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     */
+    public function rules(): array
+    {
+        $budgetCategoryId = $this->route('id');
+
+        return [
+            'code' => [
+                'required',
+                'string',
+                Rule::unique('budget_categories','code')
+                ->ignore($budgetCategoryId)
+                ->whereNull('deleted_at')
+            ],
+            'label' => 'required|string',
+            'type' => 'required|string',
+            'budgetary_area' => 'required|string',
+            'is_active' => 'sometimes|boolean',
+        ];
+    }
+}

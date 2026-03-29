@@ -1,0 +1,33 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('plan_type', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('phase_id')->constrained('phases')->restrictOnDelete();
+            $table->string('task_name');
+            $table->foreignId('previous_phases_id')->nullable()->constrained('phases')->restrictOnDelete();
+            $table->integer('order');
+            $table->integer('duration');
+            $table->timestamps();
+            $table->softDeletes();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('plan_type');
+    }
+};

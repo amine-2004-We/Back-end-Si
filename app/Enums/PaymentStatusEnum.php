@@ -1,0 +1,21 @@
+<?php
+
+namespace App\Enums;
+
+enum PaymentStatusEnum: string
+{
+    case VALIDE='Validé';
+    case ENATTENTE='En attente';
+    case REJETE='Rejeté';
+    public static function options(): array
+    {
+        return array_map(fn(self $case) => [
+            'value' => $case->value,
+        ], self::cases());
+    }
+
+    public static function values(): array
+    {
+        return array_column(self::cases(), 'value');
+    }
+}

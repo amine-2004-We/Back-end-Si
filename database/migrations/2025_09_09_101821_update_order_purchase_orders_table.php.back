@@ -1,0 +1,42 @@
+<?php
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Support\Facades\DB;
+
+return new class extends Migration
+{
+    public function up(): void
+    {
+        // Supprimer l'ancienne contrainte check si elle existe
+        DB::statement("ALTER TABLE purchase_orders DROP CONSTRAINT IF EXISTS purchase_orders_status_check");
+
+        // Modifier le type de la colonne en VARCHAR
+        DB::statement("ALTER TABLE purchase_orders ALTER COLUMN status TYPE VARCHAR(255)");
+
+        // Ajouter la contrainte CHECK pour les statuts français
+        DB::statement("
+            ALTER TABLE purchase_orders
+            ADD CONSTRAINT purchase_orders_status_check
+            CHECK (status IN (
+                'En attente de validation',
+                'Validé par CG',
+                'Validé par Achats',
+                'Validé par DG',
+                'Annulé'
+            ))
+        ");
+
+        // Définir la valeur par défaut
+        DB::statement("ALTER TABLE purchase_orders ALTER COLUMN status SET DEFAULT 'En attente de validation'");
+        DB::statement("ALTER TABLE purchase_orders ALTER COLUMN status SET NOT NULL");
+    }
+
+    public function down(): void
+    {
+        // Supprimer la contrainte
+        DB::statement("ALTER TABLE purchase_orders DROP CONSTRAINT IF EXISTS purchase_orders_status_check");
+
+        // Revenir à un varchar simple
+        DB::statement("ALTER TABLE purchase_orders ALTER COLUMN status TYPE VARCHAR(255)");
+        DB::statement("ALTER TABLE purchase_orders ALTER COLUMN status DROP DEFAULT");
+    }
+};
