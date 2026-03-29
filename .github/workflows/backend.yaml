@@ -53,9 +53,9 @@ jobs:
 
             cd /home/ubuntu/zakoura
 
-            docker pull amineautomation/si-zakoura-backend:latest
+            docker compose pull backend
 
-            docker compose up -d backend
+            docker compose up -d --force-recreate backend
 
             docker compose exec -T backend php artisan migrate --force
 
