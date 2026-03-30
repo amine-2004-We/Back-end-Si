@@ -53,11 +53,11 @@ jobs:
 
             cd /home/ubuntu/home/user/SI-Zakoura-back-end-
 
-            docker-compose pull backend
+            docker-compose pull
 
             docker-compose down
 
-            docker-compose up -d --force-recreate backend
+            docker-compose up -d --force-recreate
 
             docker-compose exec -T backend php artisan migrate --force
 
@@ -72,3 +72,9 @@ jobs:
 
             echo '--- Logs db (50 dernières lignes) ---'
             docker-compose logs --tail=50 db
+
+            echo '--- Logs frontend (50 dernières lignes) ---'
+            docker-compose logs --tail=50 frontend
+
+            echo '--- Logs nginx (50 dernières lignes) ---'
+            docker-compose logs --tail=50 nginx

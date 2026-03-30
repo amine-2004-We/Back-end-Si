@@ -6,7 +6,7 @@ Route::get('/api', function () {
     return view('welcome');
 });
 Route::get('/api/test', function () {
-    return response()->json(['statusss' => 'ok job ci/cd last test']);
+    return response()->json(['statusss' => 'ok job ci/cd last test 22222']);
 });
 
 Route::get('/api/healthz', function() {
