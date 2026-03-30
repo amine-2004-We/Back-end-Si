@@ -51,16 +51,16 @@ jobs:
           key: ${{ secrets.SERVER_SSH_KEY }}
           script: |
 
-            cd /home/ubuntu/zakoura
+            cd /home/ubuntu/home/user/SI-Zakoura-back-end-
 
-            docker compose pull backend
+            docker-compose pull backend
 
-            docker compose up -d --force-recreate backend
+            docker-compose up -d --force-recreate backend
 
-            docker compose exec -T backend php artisan migrate --force
+            docker-compose exec -T backend php artisan migrate --force
 
-            docker compose exec -T backend php artisan config:cache
+            docker-compose exec -T backend php artisan config:cache
 
-            docker compose exec -T backend php artisan route:cache
+            docker-compose exec -T backend php artisan route:cache
 
             docker image prune -f
