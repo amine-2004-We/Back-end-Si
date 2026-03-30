@@ -55,6 +55,8 @@ jobs:
 
             docker-compose pull backend
 
+            docker-compose down
+
             docker-compose up -d --force-recreate backend
 
             docker-compose exec -T backend php artisan migrate --force
@@ -64,3 +66,9 @@ jobs:
             docker-compose exec -T backend php artisan route:cache
 
             docker image prune -f
+
+            echo '--- Logs backend (50 dernières lignes) ---'
+            docker-compose logs --tail=50 backend
+
+            echo '--- Logs db (50 dernières lignes) ---'
+            docker-compose logs --tail=50 db
